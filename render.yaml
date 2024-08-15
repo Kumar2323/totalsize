@@ -1,6 +1,7 @@
 services:
   - type: python
     name: my-pyrogram-bot
+    runtime: python38
     env:
       API_ID: ${API_ID}
       API_HASH: ${API_HASH}
