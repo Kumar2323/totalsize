@@ -3,3 +3,4 @@ humanize
 pymongo
 tgcrypto
 motor
+aiohttp
