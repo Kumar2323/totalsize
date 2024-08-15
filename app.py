@@ -3,6 +3,8 @@ from pyrogram.types import Message
 from humanize import naturalsize
 from pymongo import MongoClient
 import os
+import asyncio
+from aiohttp import web
 
 # Pyrogram client
 app = Client("my_bot",
@@ -54,6 +56,27 @@ async def get_mongo_info(_, message: Message):
         else:
             await message.reply("Invalid format. Please use the format: `mongodb+srv://user:password@cluster0.8vqs89z.mongodb.net/ db_name collection_name`")
 
-# Run the bot
+async def handle(request):
+    return web.Response(text="Bot is running")
+
+async def web_server():
+    web_app = web.Application()
+    web_app.router.add_get("/", handle)
+    return web_app
+
+async def main():
+    await app.start()
+
+    # Start web server
+    port = int(os.environ.get("PORT", 8080))
+    web_app = await web_server()
+    web_runner = web.AppRunner(web_app)
+    await web_runner.setup()
+    site = web.TCPSite(web_runner, "0.0.0.0", port)
+    await site.start()
+
+    print("Bot started")
+    await asyncio.Future()
+
 if __name__ == "__main__":
-    app.run()
+    asyncio.run(main())
